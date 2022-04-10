@@ -1,3 +1,5 @@
 /venv/
 /rocket-learn/
 .idea
+/checkpoint_save_directory/
+/wandb/

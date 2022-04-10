@@ -1,7 +1,9 @@
 from typing import Any
 
+import numpy
 from rlgym.utils.gamestates import PlayerData, GameState
 from rlgym.utils.obs_builders.advanced_obs import AdvancedObs
+
 
 # ROCKET-LEARN ALWAYS EXPECTS A BATCH DIMENSION IN THE BUILT OBSERVATION
 class ExpandAdvancedObs(AdvancedObs):

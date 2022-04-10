@@ -3,8 +3,9 @@ from typing import Any
 import gym.spaces
 import numpy as np
 from gym.spaces import Discrete
-from rlgym.utils.action_parsers import ActionParser, DiscreteAction
+from rlgym.utils.action_parsers import ActionParser
 from rlgym.utils.gamestates import GameState
+
 
 class ImmortalAction(ActionParser):
     def __init__(self):

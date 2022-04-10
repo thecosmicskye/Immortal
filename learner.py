@@ -1,28 +1,21 @@
 import os
 import sys
 
+import numpy as np
+import torch.jit
+from redis import Redis
 from rlgym.utils.reward_functions import CombinedReward
 from rlgym.utils.reward_functions.common_rewards import VelocityReward, VelocityPlayerToBallReward, \
     VelocityBallToGoalReward, EventReward
 
 import wandb
-
-import torch.jit
-
-from redis import Redis
-
-
-from parser import ImmortalAction
-
+from actionparser import ImmortalAction
 from agent import get_critic, get_actor
 from obs import ExpandAdvancedObs
 from rewards import JumpTouchReward
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
-
 from rocket_learn.ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
-
-import numpy as np
 
 WORKER_COUNTER = "worker-counter"
 
@@ -34,20 +27,23 @@ def obs():
 
 def rew():
     return CombinedReward.from_zipped(
-                                            (VelocityPlayerToBallReward(), 0.4),
-                                            (VelocityReward(), 0.6),
-                                            (VelocityBallToGoalReward(), 2.0), (JumpTouchReward(), 100.0),
-                                            EventReward(team_goal=1200,
-                                                        save=200,
-                                                        demo=500,
-                                                        concede=-1000),
-                                        )
+        (VelocityPlayerToBallReward(), 0.4),
+        (VelocityReward(), 0.6),
+        (VelocityBallToGoalReward(), 2.0),
+        (JumpTouchReward(), 300.0),
+        EventReward(team_goal=1200,
+                    save=200,
+                    demo=500,
+                    concede=-1000),
+    )
+
 
 def act():
     return ImmortalAction()
 
+
 def get_latest_checkpoint():
-    subdir = 'ppos'
+    subdir = 'checkpoint_save_directory'
 
     all_subdirs = [os.path.join(subdir, d) for d in os.listdir(subdir) if os.path.isdir(os.path.join(subdir, d))]
     latest_subdir = max(all_subdirs, key=os.path.getmtime)
@@ -58,6 +54,7 @@ def get_latest_checkpoint():
     print(full_dir)
 
     return full_dir
+
 
 if __name__ == "__main__":
     """
@@ -77,11 +74,7 @@ if __name__ == "__main__":
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
 
-    # ROCKET-LEARN USES WANDB WHICH REQUIRES A LOGIN TO USE. YOU CAN SET AN ENVIRONMENTAL VARIABLE
-    # OR HARDCODE IT IF YOU ARE NOT SHARING YOUR SOURCE FILES
-    wandb.login(key=os.environ["WANDB_KEY"])
-    logger = wandb.init(project="demo", entity="cosmicvivacity")
-    logger.name = "DEFAULT_LEARNER_EXAMPLE"
+
 
     # LINK TO THE REDIS SERVER YOU SHOULD HAVE RUNNING (USE THE SAME PASSWORD YOU SET IN THE REDIS
     # CONFIG)
@@ -99,8 +92,8 @@ if __name__ == "__main__":
 
     config = dict(
         seed=125,
-        actor_lr=4e-4,
-        critic_lr=4e-4,
+        actor_lr=2e-4,
+        critic_lr=2e-4,
         ent_coef=0.001,
         n_steps=1_000_000,
         batch_size=200_000,
@@ -111,13 +104,20 @@ if __name__ == "__main__":
     )
 
 
+    # ROCKET-LEARN USES WANDB WHICH REQUIRES A LOGIN TO USE. YOU CAN SET AN ENVIRONMENTAL VARIABLE
+    # OR HARDCODE IT IF YOU ARE NOT SHARING YOUR SOURCE FILES
+    wandb.login(key=os.environ["WANDB_KEY"])
+    logger = wandb.init(project="Immortal", entity=os.environ["entity"], id=run_id, config=config,
+                        settings=wandb.Settings(_disable_stats=True))
+    torch.manual_seed(logger.config.seed)
+
     # THE ROLLOUT GENERATOR CAPTURES INCOMING DATA THROUGH REDIS AND PASSES IT TO THE LEARNER.
     # -save_every SPECIFIES HOW OFTEN OLD VERSIONS ARE SAVED TO REDIS. THESE ARE USED FOR TRUESKILL
     # COMPARISON AND TRAINING AGAINST PREVIOUS VERSIONS
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        max_age=1)
+                                        max_age=1, clear=clear)
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
     # THE ACTIONS THEMSELVES. SEE network_setup.readme.txt FOR MORE INFORMATION
@@ -131,13 +131,12 @@ if __name__ == "__main__":
     actor = get_actor(split, state_dim)
 
     optim = torch.optim.Adam([
-        {"params": actor.parameters(), "lr": 4e-4},
-        {"params": critic.parameters(), "lr": 4e-4}
+        {"params": actor.parameters(), "lr": logger.config.actor_lr},
+        {"params": critic.parameters(), "lr": logger.config.critic_lr}
     ])
 
     # PPO REQUIRES AN ACTOR/CRITIC AGENT
     agent = ActorCriticAgent(actor=actor, critic=critic, optimizer=optim)
-
 
     alg = PPO(
         rollout_gen,

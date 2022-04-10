@@ -4,10 +4,9 @@ from rlgym.utils.common_values import CAR_MAX_SPEED, SIDE_WALL_X, BACK_WALL_Y, C
     BALL_MAX_SPEED
 from rlgym.utils.math import rand_vec3
 from rlgym.utils.state_setters import DefaultState, StateWrapper
-from rlgym_tools.extra_state_setters.replay_setter import ReplaySetter
 from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
+from rlgym_tools.extra_state_setters.replay_setter import ReplaySetter
 from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
-
 
 LIM_X = SIDE_WALL_X - 1152 / 2 - BALL_RADIUS * 2 ** 0.5
 LIM_Y = BACK_WALL_Y - 1152 / 2 - BALL_RADIUS * 2 ** 0.5
