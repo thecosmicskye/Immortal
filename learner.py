@@ -32,9 +32,10 @@ def rew():
         (VelocityBallToGoalReward(), 0.02),
         (JumpTouchReward(), 3.0),
         (EventReward(team_goal=1200,
-                    save=200,
-                    demo=500,
-                    concede=-1000), 0.01),
+                     save=200,
+                     demo=500,
+                     touch=50,
+                     concede=-1000), 0.01),
     )
 
 
@@ -66,15 +67,13 @@ if __name__ == "__main__":
 
     frame_skip = 6  # Number of ticks to repeat an action
     half_life_seconds = 15  # Easier to conceptualize, after this many seconds the reward discount is 0.5
-    run_name = "First"
-    run_id = None
-    file = None
-    # file = get_latest_checkpoint()
+    run_name = "Second"
+    run_id = "2emtr6mw"
+    #file = None
+    file = get_latest_checkpoint()
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
-
-
 
     # LINK TO THE REDIS SERVER YOU SHOULD HAVE RUNNING (USE THE SAME PASSWORD YOU SET IN THE REDIS
     # CONFIG)
@@ -102,7 +101,6 @@ if __name__ == "__main__":
         gamma=gamma,
         iterations_per_save=5
     )
-
 
     # ROCKET-LEARN USES WANDB WHICH REQUIRES A LOGIN TO USE. YOU CAN SET AN ENVIRONMENTAL VARIABLE
     # OR HARDCODE IT IF YOU ARE NOT SHARING YOUR SOURCE FILES
