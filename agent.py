@@ -1,3 +1,5 @@
+from torch.nn import Sequential, Linear, LeakyReLU
+
 from rocket_learn.agent.discrete_policy import DiscretePolicy
 from rocket_learn.utils.util import SplitLayer
 

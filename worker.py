@@ -1,5 +1,5 @@
-import sys
 import argparse
+import sys
 
 import torch
 from redis import Redis
@@ -7,8 +7,8 @@ from rlgym.envs import Match
 from rlgym.utils.terminal_conditions.common_conditions import TimeoutCondition, NoTouchTimeoutCondition, \
     GoalScoredCondition
 
-from learner import WORKER_COUNTER
 import learner
+from learner import WORKER_COUNTER
 from rocket_learn.agent.pretrained_agents.human_agent import HumanAgent
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 from state import ImmortalStateSetter
@@ -33,7 +33,9 @@ def get_match(game_speed=100, human_match=False):
         state_setter=ImmortalStateSetter(),
         obs_builder=learner.obs(),
         action_parser=learner.act(),
-        terminal_conditions=terminals,
+        terminal_conditions=[TimeoutCondition(round(fps * 30)),
+                 NoTouchTimeoutCondition(round(fps * 20)),
+                 GoalScoredCondition()],
         reward_function=learner.rew(),
         tick_skip=frame_skip,
     )
@@ -50,7 +52,7 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
     human = None
 
     past_prob = .1
-    eval_prob = .01
+    eval_prob = .005
     game_speed = 100
 
     if is_streamer:
