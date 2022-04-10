@@ -1,7 +1,7 @@
 numpy~=1.21.5
 rlgym~=1.1.0
 --find-links https://download.pytorch.org/whl/torch_stable.html
-torch~=1.11.0+cu113
+torch==1.11.0+cu113
 redis~=4.2.2
 wandb~=0.12.14
 gym~=0.23.1
