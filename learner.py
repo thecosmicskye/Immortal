@@ -27,14 +27,14 @@ def obs():
 
 def rew():
     return CombinedReward.from_zipped(
-        (VelocityPlayerToBallReward(), 0.4),
-        (VelocityReward(), 0.6),
-        (VelocityBallToGoalReward(), 2.0),
-        (JumpTouchReward(), 300.0),
-        EventReward(team_goal=1200,
+        (VelocityPlayerToBallReward(), 0.004),
+        (VelocityReward(), 0.006),
+        (VelocityBallToGoalReward(), 0.02),
+        (JumpTouchReward(), 3.0),
+        (EventReward(team_goal=1200,
                     save=200,
                     demo=500,
-                    concede=-1000),
+                    concede=-1000), 0.01),
     )
 
 
@@ -92,8 +92,8 @@ if __name__ == "__main__":
 
     config = dict(
         seed=125,
-        actor_lr=2e-4,
-        critic_lr=2e-4,
+        actor_lr=4e-4,
+        critic_lr=4e-4,
         ent_coef=0.001,
         n_steps=1_000_000,
         batch_size=200_000,
