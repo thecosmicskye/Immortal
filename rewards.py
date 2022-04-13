@@ -19,7 +19,8 @@ class JumpTouchReward(RewardFunction):
     ) -> float:
         if player.ball_touched and not player.on_ground and state.ball.position[2] >= self.min_height:
             reward = (((state.ball.position[2] - common_values.BALL_RADIUS) ** self.exp) / self.div)
-            print(f"Aerial hit! % from ceiling: {round(reward*100,2)}")
+            if reward > .05:
+                print(f"Aerial hit! % from ceiling: {round(reward*100,2)}%")
             return reward
 
         return 0
