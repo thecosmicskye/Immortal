@@ -70,6 +70,7 @@ if __name__ == "__main__":
     run_id = "2emtr6mw"
     #file = None
     file = get_latest_checkpoint()
+    #file = "checkpoint_save_directory/Immortal_1649575764.6354682/Immortal_480/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
