@@ -34,7 +34,6 @@ def rew():
         (EventReward(team_goal=1200,
                      save=200,
                      demo=500,
-                     touch=50,
                      concede=-1000), 0.01),
     )
 
