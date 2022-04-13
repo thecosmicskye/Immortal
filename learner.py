@@ -99,7 +99,7 @@ if __name__ == "__main__":
         minibatch_size=100_000,
         epochs=32,
         gamma=gamma,
-        iterations_per_save=5
+        iterations_per_save=15
     )
 
     # ROCKET-LEARN USES WANDB WHICH REQUIRES A LOGIN TO USE. YOU CAN SET AN ENVIRONMENTAL VARIABLE
