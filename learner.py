@@ -12,7 +12,7 @@ import wandb
 from actionparser import ImmortalAction
 from agent import get_critic, get_actor
 from obs import ExpandAdvancedObs
-from rewards import JumpTouchReward
+from rewards import JumpTouchReward, WallTouchReward
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
 from rocket_learn.ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
@@ -30,7 +30,8 @@ def rew():
         (VelocityPlayerToBallReward(), 0.004),
         (VelocityReward(), 0.006),
         (VelocityBallToGoalReward(), 0.02),
-        (JumpTouchReward(), 3.0),
+        (JumpTouchReward(), 6.0),
+        (WallTouchReward(min_height=300), 3.0),
         (EventReward(team_goal=1200,
                      save=200,
                      demo=500,
@@ -69,8 +70,8 @@ if __name__ == "__main__":
     run_name = "Second"
     run_id = "2emtr6mw"
     #file = None
-    file = get_latest_checkpoint()
-    #file = "checkpoint_save_directory/Immortal_1649575764.6354682/Immortal_480/checkpoint.pt"
+    #file = get_latest_checkpoint()
+    file = "checkpoint_save_directory/Immortal_1649816013.2725997/Immortal_3285/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
@@ -94,9 +95,9 @@ if __name__ == "__main__":
         actor_lr=4e-4,
         critic_lr=4e-4,
         ent_coef=0.001,
-        n_steps=1_000_000,
-        batch_size=200_000,
-        minibatch_size=100_000,
+        n_steps=2_000_000,
+        batch_size=300_000,
+        minibatch_size=150_000,
         epochs=32,
         gamma=gamma,
         iterations_per_save=15
