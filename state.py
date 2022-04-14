@@ -4,6 +4,7 @@ from rlgym.utils.common_values import CAR_MAX_SPEED, SIDE_WALL_X, BACK_WALL_Y, C
     BALL_MAX_SPEED
 from rlgym.utils.math import rand_vec3
 from rlgym.utils.state_setters import DefaultState, StateWrapper
+from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
 from rlgym_tools.extra_state_setters.replay_setter import ReplaySetter
 from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
@@ -93,7 +94,7 @@ class ImmortalStateSetter(StateSetter):
         super().__init__()
 
         self.setters = [
-            ReplaySetter("replayfile1v1"),
+            AugmentSetter(ReplaySetter("replayfile1v1")),
             BetterRandom(),
             DefaultState(),
             HoopsLikeSetter(),
