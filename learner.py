@@ -28,7 +28,7 @@ def obs():
 def rew():
     return CombinedReward.from_zipped(
         (VelocityPlayerToBallReward(), 0.004),
-        (VelocityReward(), 0.006),
+        (VelocityReward(), 0.06),
         (VelocityBallToGoalReward(), 0.02),
         (JumpTouchReward(), 6.0),
         (WallTouchReward(min_height=300), 3.0),
@@ -70,8 +70,8 @@ if __name__ == "__main__":
     run_name = "Second"
     run_id = "2emtr6mw"
     #file = None
-    #file = get_latest_checkpoint()
-    file = "checkpoint_save_directory/Immortal_1649816013.2725997/Immortal_3285/checkpoint.pt"
+    file = get_latest_checkpoint()
+    #file = "checkpoint_save_directory/Immortal_1649816013.2725997/Immortal_3285/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
@@ -100,7 +100,7 @@ if __name__ == "__main__":
         minibatch_size=150_000,
         epochs=32,
         gamma=gamma,
-        iterations_per_save=15
+        iterations_per_save=5
     )
 
     # ROCKET-LEARN USES WANDB WHICH REQUIRES A LOGIN TO USE. YOU CAN SET AN ENVIRONMENTAL VARIABLE
