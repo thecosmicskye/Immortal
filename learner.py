@@ -31,7 +31,7 @@ def rew():
         (VelocityReward(), 0.012),
         (VelocityBallToGoalReward(), 0.02),
         (JumpTouchReward(), 6.0),
-        (WallTouchReward(min_height=300), 3.0),
+        (WallTouchReward(min_height=250), 3.0),
         (EventReward(team_goal=1200,
                      save=200,
                      demo=500,
