@@ -94,7 +94,7 @@ class ImmortalStateSetter(StateSetter):
         super().__init__()
 
         self.setters = [
-            AugmentSetter(ReplaySetter("replayfile1v1")),
+            AugmentSetter(ReplaySetter("platdiachampgcssl_1v1.npy")),
             BetterRandom(),
             DefaultState(),
             HoopsLikeSetter(),

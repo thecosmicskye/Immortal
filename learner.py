@@ -7,6 +7,7 @@ from redis import Redis
 from rlgym.utils.reward_functions import CombinedReward
 from rlgym.utils.reward_functions.common_rewards import VelocityReward, VelocityPlayerToBallReward, \
     VelocityBallToGoalReward, EventReward
+from rlgym_tools.extra_rewards.kickoff_reward import KickoffReward
 
 import wandb
 from actionparser import ImmortalAction
@@ -28,10 +29,11 @@ def obs():
 def rew():
     return CombinedReward.from_zipped(
         (VelocityPlayerToBallReward(), 0.004),
-        (VelocityReward(), 0.012),
+        (VelocityReward(), 0.024),
         (VelocityBallToGoalReward(), 0.02),
+        (KickoffReward(), 0.2),
         (JumpTouchReward(), 6.0),
-        (WallTouchReward(min_height=250), 3.0),
+        (WallTouchReward(min_height=250), 6.0),
         (EventReward(team_goal=1200,
                      save=200,
                      demo=500,
@@ -71,7 +73,7 @@ if __name__ == "__main__":
     run_id = "2emtr6mw"
     #file = None
     file = get_latest_checkpoint()
-    #file = "checkpoint_save_directory/Immortal_1649816013.2725997/Immortal_3285/checkpoint.pt"
+    #file = "checkpoint_save_directory/Immortal_1650212001.201177/Immortal_4790/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
@@ -92,9 +94,9 @@ if __name__ == "__main__":
 
     config = dict(
         seed=125,
-        actor_lr=4e-4,
-        critic_lr=4e-4,
-        ent_coef=0.001,
+        actor_lr=2e-4,
+        critic_lr=2e-4,
+        ent_coef=0.01,
         n_steps=2_000_000,
         batch_size=300_000,
         minibatch_size=150_000,

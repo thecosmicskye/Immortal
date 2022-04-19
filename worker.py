@@ -51,7 +51,7 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
     agents = None
     human = None
 
-    past_prob = .1
+    past_prob = .2
     eval_prob = .005
     game_speed = 100
 
