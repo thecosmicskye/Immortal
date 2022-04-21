@@ -73,7 +73,7 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
                               past_version_prob=past_prob,
                               evaluation_prob=eval_prob,
                               send_gamestates=send_gamestates,
-                              streamer_mode=is_streamer,
+                              streamer_mode=False,
                               pretrained_agents=agents,
                               human_agent=human)
 
