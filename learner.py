@@ -28,8 +28,8 @@ def obs():
 
 def rew():
     return CombinedReward.from_zipped(
-        #(VelocityPlayerToBallReward(), 0.004),
-        (VelocityReward(), 0.1),
+        (VelocityPlayerToBallReward(), 0.004),
+        (VelocityReward(), 0.048),
         (VelocityBallToGoalReward(), 0.02),
         (KickoffReward(), 0.8),
         (JumpTouchReward(), 6.0),
@@ -72,8 +72,8 @@ if __name__ == "__main__":
     run_name = "Second"
     run_id = "2emtr6mw"
     #file = None
-    file = get_latest_checkpoint()
-    #file = "checkpoint_save_directory/Immortal_1650346175.8750103/Immortal_5090/checkpoint.pt"
+    #file = get_latest_checkpoint()
+    file = "checkpoint_save_directory/Immortal_1650468499.294253/Immortal_5445/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
