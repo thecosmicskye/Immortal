@@ -3,3 +3,4 @@
 .idea
 /checkpoint_save_directory/
 /wandb/
+.pt
