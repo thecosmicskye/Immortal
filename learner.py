@@ -7,13 +7,12 @@ from redis import Redis
 from rlgym.utils.reward_functions import CombinedReward
 from rlgym.utils.reward_functions.common_rewards import VelocityReward, VelocityPlayerToBallReward, \
     VelocityBallToGoalReward, EventReward
-from rlgym_tools.extra_rewards.kickoff_reward import KickoffReward
 
 import wandb
 from actionparser import ImmortalAction
 from agent import get_critic, get_actor
 from obs import ExpandAdvancedObs
-from rewards import JumpTouchReward, WallTouchReward
+from rewards import JumpTouchReward, WallTouchReward, KickoffReward
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
 from rocket_learn.ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
@@ -28,11 +27,11 @@ def obs():
 
 def rew():
     return CombinedReward.from_zipped(
-        (VelocityPlayerToBallReward(), 0.004),
-        (VelocityReward(), 0.048),
-        (VelocityBallToGoalReward(), 0.02),
-        (KickoffReward(), 1000),
-        (JumpTouchReward(), 2.0),
+        #(VelocityPlayerToBallReward(), 0.004),
+        (VelocityReward(), 0.01),
+        #(VelocityBallToGoalReward(), 0.02),
+        (KickoffReward()),
+        (JumpTouchReward(), 1.0),
         (WallTouchReward(min_height=250), 4.0),
         (EventReward(team_goal=1200,
                      save=200,
@@ -72,8 +71,8 @@ if __name__ == "__main__":
     run_name = "Second"
     run_id = "2emtr6mw"
     #file = None
-    file = get_latest_checkpoint()
-    #file = "checkpoint_save_directory/Immortal_1650468499.294253/Immortal_5445/checkpoint.pt"
+    #file = get_latest_checkpoint()
+    file = "checkpoint_save_directory/Immortal_1650858784.0543036/Immortal_6915/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
