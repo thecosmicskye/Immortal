@@ -1,4 +1,6 @@
 import numpy as np
+from rlgym.utils.common_values import CAR_MAX_SPEED
+
 from rlgym.utils import RewardFunction
 from rlgym.utils import common_values
 from rlgym.utils.gamestates import GameState, PlayerData
@@ -43,3 +45,34 @@ class WallTouchReward(RewardFunction):
             return reward
 
         return 0
+
+
+class KickoffReward(RewardFunction):
+    """
+    a simple reward that encourages driving towards the ball fast while it's in the neutral kickoff position
+    """
+    def __init__(self):
+        super().__init__()
+        self.div = CAR_MAX_SPEED ** 2
+
+    def reset(self, initial_state: GameState):
+        pass
+
+    def get_reward(
+        self, player: PlayerData, state: GameState, previous_action: np.ndarray
+    ) -> float:
+        reward = 0
+        if state.ball.position[0] == 0 and state.ball.position[1] == 0:
+            vel = player.car_data.linear_velocity
+            pos_diff = state.ball.position - player.car_data.position
+            # Regular component velocity
+            norm_pos_diff = pos_diff / np.linalg.norm(pos_diff)
+            vel_to_ball = float(np.dot(norm_pos_diff, vel))
+            vtb_exp = (vel_to_ball ** 2 / self.div) * .5
+            #print(f"KICKOFF: VTB: {vel_to_ball} Reward: {vtb_exp}")
+            reward += vtb_exp
+            if player.boost_amount > 0:
+                boost_reward = (previous_action[6] > 0) * .5
+                #print(f"KICKOFF: BOOSTY REWARD: {boost_reward}")
+                reward += boost_reward
+        return reward

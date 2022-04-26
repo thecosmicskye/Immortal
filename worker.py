@@ -58,7 +58,7 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
     if is_streamer:
         past_prob = 0
         eval_prob = 0
-        game_speed = 1
+        game_speed = 100
 
     if human_match:
         past_prob = 0
