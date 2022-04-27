@@ -14,7 +14,7 @@ actor = get_actor(split, state_dim, True)
 # PPO REQUIRES AN ACTOR/CRITIC AGENT
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
-checkpoint = torch.load(os.path.join(cur_dir, "checkpoint8.pt"))
+checkpoint = torch.load(os.path.join(cur_dir, "checkpoint9.pt"))
 actor.load_state_dict(checkpoint['actor_state_dict'])
 actor.eval()
 torch.jit.save(torch.jit.script(actor), 'jit.pt')
