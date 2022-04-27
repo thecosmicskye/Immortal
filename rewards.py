@@ -24,7 +24,7 @@ class JumpTouchReward(RewardFunction):
                 and not player.on_ground \
                 and state.ball.position[2] >= self.min_height \
                 and self.ticks_until_next_reward <= 0:
-            self.ticks_until_next_reward = 23
+            self.ticks_until_next_reward = 47
             reward = (((state.ball.position[2] - common_values.BALL_RADIUS) ** self.exp) / self.div)
             if reward > .05:
                 print(f"Aerial hit! % from ceiling: {round(reward*100,2)}%")
