@@ -12,19 +12,24 @@ class JumpTouchReward(RewardFunction):
         self.min_height = min_height
         self.exp = exp
         self.div = common_values.CEILING_Z ** self.exp
+        self.ticks_until_next_reward = 0
 
     def reset(self, initial_state: GameState):
-        pass
+        self.ticks_until_next_reward = 0
 
     def get_reward(
         self, player: PlayerData, state: GameState, previous_action: np.ndarray
     ) -> float:
-        if player.ball_touched and not player.on_ground and state.ball.position[2] >= self.min_height:
+        if player.ball_touched \
+                and not player.on_ground \
+                and state.ball.position[2] >= self.min_height \
+                and self.ticks_until_next_reward <= 0:
+            self.ticks_until_next_reward = 15
             reward = (((state.ball.position[2] - common_values.BALL_RADIUS) ** self.exp) / self.div)
             if reward > .05:
                 print(f"Aerial hit! % from ceiling: {round(reward*100,2)}%")
             return reward
-
+        self.ticks_until_next_reward -= 1
         return 0
 
 class WallTouchReward(RewardFunction):
@@ -68,11 +73,11 @@ class KickoffReward(RewardFunction):
             # Regular component velocity
             norm_pos_diff = pos_diff / np.linalg.norm(pos_diff)
             vel_to_ball = float(np.dot(norm_pos_diff, vel))
-            vtb_exp = (vel_to_ball ** 2 / self.div) * .5
+            vtb_exp = (vel_to_ball ** 2 / self.div) #* .5
             #print(f"KICKOFF: VTB: {vel_to_ball} Reward: {vtb_exp}")
             reward += vtb_exp
-            if player.boost_amount > 0:
-                boost_reward = (previous_action[6] > 0) * .5
+            #if player.boost_amount > 0:
+                #boost_reward = (previous_action[6] > 0) * .5
                 #print(f"KICKOFF: BOOSTY REWARD: {boost_reward}")
-                reward += boost_reward
+                #reward += boost_reward
         return reward
