@@ -1,4 +1,6 @@
 import numpy as np
+from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
+
 from rlgym.utils import StateSetter
 from rlgym.utils.common_values import CAR_MAX_SPEED, SIDE_WALL_X, BACK_WALL_Y, CEILING_Z, BALL_RADIUS, CAR_MAX_ANG_VEL, \
     BALL_MAX_SPEED
@@ -85,10 +87,11 @@ class ImmortalStateSetter(StateSetter):
             self,
             *,
             replay_prob=0.70,
-            random_prob=0.05,
+            random_prob=0.01,
             kickoff_prob=0.15,
             hoops_prob=0.05,
-            walls_prob=0.05
+            walls_prob=0.05,
+            goalie_prob=0.04
     ):  # add goalie_prob/shooting/dribbling?
 
         super().__init__()
@@ -99,8 +102,9 @@ class ImmortalStateSetter(StateSetter):
             DefaultState(),
             HoopsLikeSetter(),
             WallPracticeState(),
+            GoaliePracticeState(first_defender_in_goal=False, allow_enemy_interference=True),
         ]
-        self.probs = np.array([replay_prob, random_prob, kickoff_prob, hoops_prob, walls_prob])
+        self.probs = np.array([replay_prob, random_prob, kickoff_prob, hoops_prob, walls_prob, goalie_prob])
 
         assert self.probs.sum() == 1, "Probabilities must sum to 1"
 

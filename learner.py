@@ -28,11 +28,11 @@ def obs():
 def rew():
     return CombinedReward.from_zipped(
         #(VelocityPlayerToBallReward(), 0.004),
-        (VelocityReward(), 0.01),
+        (VelocityReward(), 0.007),
         #(VelocityBallToGoalReward(), 0.02),
-        (KickoffReward()),
-        (JumpTouchReward(), 6.0),
-        (WallTouchReward(min_height=250), 4.0),
+        (KickoffReward(), 0.5),
+        (JumpTouchReward(), 4.0),
+        (WallTouchReward(min_height=250), 3.0),
         (EventReward(team_goal=1200,
                      save=200,
                      demo=500,
