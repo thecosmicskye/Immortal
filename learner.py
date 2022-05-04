@@ -34,7 +34,7 @@ def rew():
         (JumpTouchReward(), 4.0),
         (WallTouchReward(min_height=250), 2.0),
         (EventReward(team_goal=1200,
-                     save=200,
+                     #save=200,
                      demo=500,
                      concede=-1000), 0.01),
     )
