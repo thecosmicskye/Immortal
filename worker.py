@@ -53,7 +53,7 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
     nectov1 = NectoV1(model_string=model_name, n_players=2)
 
     #EACH AGENT AND THEIR PROBABILITY OF OCCURRENCE
-    agents = {nectov1: .2}
+    agents = {nectov1: .4}
 
     human = None
 
