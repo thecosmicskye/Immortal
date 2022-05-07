@@ -36,7 +36,7 @@ def rew():
         (EventReward(team_goal=1200,
                      #save=200,
                      demo=500,
-                     concede=-1000), 0.01),
+                     concede=-1200), 0.01),
     )
 
 
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     run_id = "2emtr6mw"
     #file = None
     file = get_latest_checkpoint()
-    #file = "checkpoint_save_directory/Immortal_1650858784.0543036/Immortal_6915/checkpoint.pt"
+    #file = "checkpoint_save_directory/Immortal_1651815765.8292308/Immortal_10285/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
@@ -93,8 +93,8 @@ if __name__ == "__main__":
 
     config = dict(
         seed=125,
-        actor_lr=4e-4,
-        critic_lr=4e-4,
+        actor_lr=1e-4,
+        critic_lr=1e-4,
         ent_coef=0.005,
         n_steps=2_000_000,
         batch_size=300_000,
