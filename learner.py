@@ -71,8 +71,8 @@ if __name__ == "__main__":
     run_name = "Second"
     run_id = "2emtr6mw"
     #file = None
-    file = get_latest_checkpoint()
-    #file = "checkpoint_save_directory/Immortal_1651815765.8292308/Immortal_10285/checkpoint.pt"
+    # file = get_latest_checkpoint()
+    file = "checkpoint_save_directory/Immortal_1652046774.017649/Immortal_10920/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
@@ -116,8 +116,10 @@ if __name__ == "__main__":
     # COMPARISON AND TRAINING AGAINST PREVIOUS VERSIONS
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
-                                        save_every=logger.config.iterations_per_save,
-                                        max_age=1, clear=clear)
+                                        save_every=logger.config.iterations_per_save*3,
+                                        max_age=1,
+                                        #min_sigma=2,
+                                        clear=clear)
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
     # THE ACTIONS THEMSELVES. SEE network_setup.readme.txt FOR MORE INFORMATION
@@ -147,7 +149,8 @@ if __name__ == "__main__":
         minibatch_size=logger.config.minibatch_size,
         epochs=logger.config.epochs,
         gamma=logger.config.gamma,
-        logger=logger,
+        logger=logger#,
+        #zero_grads_with_none=True
     )
 
     # BEGIN TRAINING. IT WILL CONTINUE UNTIL MANUALLY STOPPED
@@ -157,5 +160,7 @@ if __name__ == "__main__":
     if file:
         print(f'loading from {file}')
         alg.load(file, continue_iterations=True)
+        alg.agent.optimizer.param_groups[0]["lr"] = logger.config.actor_lr
+        alg.agent.optimizer.param_groups[1]["lr"] = logger.config.critic_lr
 
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")

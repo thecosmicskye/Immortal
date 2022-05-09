@@ -5,3 +5,4 @@ torch==1.11.0+cu113
 redis~=4.2.2
 wandb~=0.12.14
 gym~=0.23.1
+rlgym_tools
