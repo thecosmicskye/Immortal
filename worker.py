@@ -81,7 +81,9 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
                               send_gamestates=send_gamestates,
                               streamer_mode=False,
                               pretrained_agents=agents,
-                              human_agent=human)
+                              sigma_target=2,
+                              human_agent=human,
+                              deterministic_old_prob=0.5)
 
 
 def main():
