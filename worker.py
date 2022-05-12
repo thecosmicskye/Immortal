@@ -16,7 +16,6 @@ from state import ImmortalStateSetter
 
 
 def get_match(game_speed=100, human_match=False):
-
     frame_skip = 6  # Number of ticks to repeat an action
     fps = 120 / frame_skip
 
@@ -35,8 +34,8 @@ def get_match(game_speed=100, human_match=False):
         obs_builder=learner.obs(),
         action_parser=learner.act(),
         terminal_conditions=[TimeoutCondition(round(fps * 30)),
-                 NoTouchTimeoutCondition(round(fps * 20)),
-                 GoalScoredCondition()],
+                             NoTouchTimeoutCondition(round(fps * 20)),
+                             GoalScoredCondition()],
         reward_function=learner.rew(),
         tick_skip=frame_skip,
     )
@@ -52,7 +51,7 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
     model_name = "necto-model-30Y.pt"
     nectov1 = NectoV1(model_string=model_name, n_players=2)
 
-    #EACH AGENT AND THEIR PROBABILITY OF OCCURRENCE
+    # EACH AGENT AND THEIR PROBABILITY OF OCCURRENCE
     agents = {nectov1: .4}
 
     human = None
@@ -72,7 +71,6 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
         game_speed = 1
         human = HumanAgent()
 
-
     return RedisRolloutWorker(r, name,
                               match=get_match(game_speed=game_speed,
                                               human_match=human_match),
@@ -81,9 +79,10 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
                               send_gamestates=send_gamestates,
                               streamer_mode=False,
                               pretrained_agents=agents,
-                              sigma_target=2,
-                              human_agent=human,
-                              deterministic_old_prob=0.5)
+                              # sigma_target=2,
+                              human_agent=human
+                              # deterministic_old_prob=0.5
+                              )
 
 
 def main():
