@@ -32,7 +32,7 @@ def rew():
         #(VelocityBallToGoalReward(), 0.02),
         (KickoffReward(), 0.5),
         (JumpTouchReward(), 4.0),
-        (WallTouchReward(min_height=250), 2.0),
+        #(WallTouchReward(min_height=250), 2.0),
         (EventReward(team_goal=1200,
                      #save=200,
                      demo=500,
@@ -71,8 +71,8 @@ if __name__ == "__main__":
     run_name = "Second"
     run_id = "2emtr6mw"
     #file = None
-    file = get_latest_checkpoint()
-    #file = "checkpoint_save_directory/Immortal_1652078111.831633/Immortal_11480/checkpoint.pt"
+    # file = get_latest_checkpoint()
+    file = "checkpoint_save_directory/Immortal_1652412752.390929/Immortal_12200/checkpoint.pt"
 
     fps = 120 / frame_skip
     gamma = np.exp(np.log(0.5) / (fps * half_life_seconds))
