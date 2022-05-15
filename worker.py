@@ -11,6 +11,7 @@ import learner
 from learner import WORKER_COUNTER
 from rocket_learn.agent.pretrained_agents.human_agent import HumanAgent
 from rocket_learn.agent.pretrained_agents.necto.necto_v1 import NectoV1
+from rocket_learn.agent.pretrained_agents.nexto.nexto import Nexto
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 from state import ImmortalStateSetter
 
@@ -48,11 +49,13 @@ def make_worker(host, name, password, limit_threads=True, send_gamestates=False,
     r = Redis(host=host, password=password)
     w = r.incr(WORKER_COUNTER) - 1
 
-    model_name = "necto-model-30Y.pt"
-    nectov1 = NectoV1(model_string=model_name, n_players=2)
+    model_name1 = "necto-model-30Y.pt"
+    model_name2 = "nexto-model.pt"
+    nectov1 = NectoV1(model_string=model_name1, n_players=2)
+    nexto = Nexto(model_string=model_name2, n_players=2)
 
     # EACH AGENT AND THEIR PROBABILITY OF OCCURRENCE
-    agents = {nectov1: .4}
+    agents = {nectov1: .10, nexto: .30}
 
     human = None
 
